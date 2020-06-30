@@ -41,8 +41,11 @@ func pointer(index int, args []interface{}) uintptr {
 }
 
 func (l *library) call(procName string, errors map[syscall.Errno]error, args ...interface{}) (uintptr, uintptr, error) {
-	var proc uintptr
-	var err error
+	proc, err := l.procedure(procName)
+	if err != nil {
+		return 0, 0, err
+	}
+
 	var result1, result2 uintptr
 	var errno syscall.Errno
 
