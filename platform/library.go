@@ -37,13 +37,17 @@ func pointer(index int, args []interface{}) uintptr {
 		return uintptr(unsafe.Pointer(nil))
 	}
 
+	if ptr, ok := args[0].(uintptr); ok {
+		return ptr
+	}
+
 	return uintptr(unsafe.Pointer(&args[index]))
 }
 
-func (l *library) call(procName string, errors map[syscall.Errno]error, args ...interface{}) (uintptr, uintptr, error) {
+func (l *library) call(procName string, args ...interface{}) (uintptr, uintptr, error, syscall.Errno) {
 	proc, err := l.procedure(procName)
 	if err != nil {
-		return 0, 0, err
+		return 0, 0, err, 0
 	}
 
 	var result1, result2 uintptr
@@ -84,11 +88,8 @@ func (l *library) call(procName string, errors map[syscall.Errno]error, args ...
 			pointer(12, args), pointer(13, args), pointer(14, args),
 			pointer(15, args), pointer(16, args), pointer(17, args))
 	} else {
-		return 0, 0, fmt.Errorf("procedures with %d arguments does not supported", argsCount)
+		return 0, 0, fmt.Errorf("procedures with %d arguments does not supported", argsCount), errno
 	}
 
-	if errors != nil {
-		err = errors[errno]
-	}
-	return result1, result2, err
+	return result1, result2, err, errno
 }
