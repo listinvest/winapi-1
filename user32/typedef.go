@@ -1,18 +1,18 @@
 package user32
 
 type WindowClassEx struct {
-	Size       uint32
-	Style      uint32
-	WndProc    uintptr
-	ClsExtra   int32
-	WndExtra   int32
-	Instance   uintptr
-	Icon       uintptr
-	Cursor     uintptr
-	Background uintptr
-	MenuName   *uint16
-	ClassName  *uint16
-	IconSm     uintptr
+	Size            uint32
+	Style           uint32
+	WindowProcedure uintptr
+	ClassExtra      int32
+	WindowExtra     int32
+	Instance        uintptr
+	Icon            uintptr
+	Cursor          uintptr
+	Background      uintptr
+	MenuName        *uint16
+	ClassName       *uint16
+	IconSmall       uintptr
 }
 
 type Message struct {
@@ -21,9 +21,13 @@ type Message struct {
 	WParam  uintptr
 	LParam  uintptr
 	Time    uint32
-	Pt      Point
+	Point   Point
 }
 
 type Point struct {
 	X, Y int32
+}
+
+type Rect struct {
+	Left, Top, Right, Bottom int32
 }
