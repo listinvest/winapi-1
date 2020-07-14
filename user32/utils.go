@@ -3,6 +3,7 @@ package user32
 import (
 	"github.com/Magic-Library/winapi/platform"
 	"github.com/Magic-Library/winapi/tools"
+	"syscall"
 	"unsafe"
 )
 
@@ -23,4 +24,20 @@ func LoadCursor(instance uintptr, cursor uint16) uintptr {
 func LoadIcon(instance uintptr, icon uint16) uintptr {
 	r1, _, _ := platform.Call(tools.User32, "LoadIconW", instance, uintptr(unsafe.Pointer(MakeIntResource(icon))))
 	return r1
+}
+
+func GetClassNameToBuffer(window uintptr, buffer []uint16, max int) int {
+	r1, _, _ := platform.Call(tools.User32, "GetClassNameW",
+		window,
+		uintptr(unsafe.Pointer(&buffer[0])),
+		uintptr(max))
+
+	return int(r1)
+}
+
+func GetClassName(window uintptr) string {
+	const max = 255
+	buf := make([]uint16, max)
+	GetClassNameToBuffer(window, buf, max)
+	return syscall.UTF16ToString(buf)
 }
