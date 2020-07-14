@@ -50,3 +50,14 @@ func UpdateWindow(window uintptr) bool {
 	r, _, _ := platform.Call(tools.User32, "UpdateWindow", window)
 	return r != 0
 }
+
+func MoveWindow(window uintptr, x, y, width, height int, repaint bool) bool {
+	r, _, _ := platform.Call(tools.User32, "MoveWindow",
+		window,
+		uintptr(x),
+		uintptr(y),
+		uintptr(width),
+		uintptr(height),
+		tools.BoolPointer(repaint))
+	return r != 0
+}
